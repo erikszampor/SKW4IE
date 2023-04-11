@@ -1,0 +1,9 @@
+---
+- name: Configure Samba, fstab and firewall
+ hosts: all
+ become: true
+
+ roles:
+  - name: samba_share
+  - name: firewall
+  - name: fstab

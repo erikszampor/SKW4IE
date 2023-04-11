@@ -1,0 +1,41 @@
+---
+- name: Configure custom firewall with custom zone
+  vars:
+    allowed_services:
+     - samba
+     - ssh
+     - 4321/tcp
+
+  tasks:
+   - name: Install firewalld
+      yum:
+        name: firewalld
+        state: present
+
+- name: Enable firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+
+- name: Create custom zone
+  firewalld_zone:
+        name: myzone
+        state: present
+        immediate: true
+        masquerade: no
+
+- name: Add allowed services to custom zone
+ firewalld:
+        zone: myzone
+        service: "{{ allowed_services }}"
+        state: enabled
+        immediate: true
+        action: accept
+
+- name: Reject incoming traffic to custom zone by default
+      firewalld:
+        zone: myzone
+        state: enabled
+        immediate: true
+        action: reject
