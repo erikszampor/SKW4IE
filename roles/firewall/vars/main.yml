@@ -1,0 +1,7 @@
+---
+allowed_services:
+  - ssh
+  - http
+allowed_ports:
+  - 4321/tcp
+custom_zone: your_custom_zone

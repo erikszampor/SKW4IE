@@ -1,0 +1,26 @@
+---
+- name: Create Custom Zone
+  firewalld:
+    zone: "{{ custom_zone }}"
+    state: present
+    permanent: true
+- name: Set Default Zone to Reject
+  ansible.posix.firewalld:
+    zone: "{{ custom_zone }}"
+    target: "%%REJECT%%"
+    state: enabled
+    permanent: true
+- name: Allow Services in Custom Zone
+  firewalld:
+    zone: "{{ custom_zone }}"
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+  loop: "{{ allowed_services }}"
+- name: Allow Ports in Custom Zone
+  firewalld:
+    zone: "{{ custom_zone }}"
+    port: "{{ item }}"
+    state: enabled
+    permanent: true
+  loop: "{{ allowed_ports }}"

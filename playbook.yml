@@ -1,9 +1,8 @@
 ---
-- name: Configure Samba, fstab and firewall
- hosts: all
- become: true
+- name: Playbook to install Samba
+  hosts: localhost
+  become: true
 
- roles:
-  - name: samba_share
-  - name: firewall
-  - name: fstab
+  roles:
+    - samba
+    - firewall

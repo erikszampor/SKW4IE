@@ -1,0 +1,43 @@
+---
+- name: Install Samba
+  yum:
+    name: samba
+    state: present
+
+- name: Create guest share directory
+  file:
+    path: "{{ share_folder }}"
+    state: directory
+
+- name: Configure Samba guest share
+  lineinfile:
+    path: /etc/samba/smb.conf
+    line: "{{ item }}"
+    insertafter: EOF
+  with_items:
+    - "[guest_share]"
+    - "    path = {{ share_folder }}"
+    - "    guest ok = yes"
+    - "    read only = yes"
+    - "    browsable = yes"
+  notify: Restart Samba
+
+- name: Create mount directory
+  file:
+    path: "{{ mount_path }}"
+    state: directory
+
+- name: Add Samba guest share to fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "//localhost/guest_share {{ mount_path }} cifs guest,ro 0 0"
+    insertafter: EOF
+
+- name: Mount the Samba share
+  mount:
+    src: "//localhost/guest_share"
+    path: "{{ mount_path }}"
+    fstype: cifs
+    opts: guest,ro
+    state: present
+    

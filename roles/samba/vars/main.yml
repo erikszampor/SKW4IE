@@ -1,0 +1,3 @@
+---
+share_folder: /home/samba_share
+mount_path: /data/dir
